@@ -106,3 +106,75 @@ Verifica se a API está funcionando corretamente.
 curl --location 'http://127.0.0.1:8000/' \
 --header 'Accept: application/json'
 ```
+
+---
+
+## Rodando localmente (sem Docker)
+
+Se você quiser rodar a API diretamente no seu ambiente Python:
+
+1. **Criar um virtualenv** (recomendado)
+
+```bash
+python -m venv venv
+source venv/bin/activate
+venv\Scripts\activate
+```
+
+2. **Instalar dependências**
+
+```bash
+pip install -r requirements.txt
+```
+
+3. **Configurar variáveis de ambiente**
+
+Crie um arquivo `.env` como no passo anterior:
+
+```env
+ENV=development
+OPENAI_API_KEY=<SUA_CHAVE_OPENAI>
+DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/summaries_db
+```
+
+> Atenção: nesse caso o banco precisa estar rodando localmente em `localhost`.
+
+4. **Rodar a aplicação**
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+5. **Acessar a API**
+
+Abra: `http://localhost:8000/`
+
+---
+
+## Testes
+
+Para garantir que tudo está funcionando e evitar regressões, você pode rodar os testes automatizados:
+
+1. **Instalar dependências de testes**
+
+```bash
+pip install -r requirements-test.txt
+```
+
+2. **Rodar os testes**
+
+```bash
+pytest -v
+```
+
+3. **Rodar testes específicos** (exemplo: apenas para `summaries`)
+
+```bash
+pytest tests/test_summaries.py -v
+```
+
+> Dica: Se estiver usando Docker, você também pode rodar testes dentro do container da API:
+
+```bash
+docker-compose run --rm api pytest -v
+```
